@@ -109,6 +109,12 @@ The API key is stored only in the local `config.json`; the app talks to the Deep
 
 ## 致谢 · Acknowledgments
 
-本项目由原 DSH 插件 [DeepSeek-Balance-Whale-Widget](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget) 独立化改造而来，感谢原作者 [MeteorNOX](https://github.com/MeteorNOX) 的创意与实现。许可证请以原仓库为准。
+本项目由原 DSH 插件 [DeepSeek-Balance-Whale-Widget](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget) 独立化改造而来，感谢原作者 [MeteorNOX](https://github.com/MeteorNOX) 的创意与实现。
 
-This project is derived from the original DSH extension [DeepSeek-Balance-Whale-Widget](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget). Thanks to [MeteorNOX](https://github.com/MeteorNOX) for the original idea and implementation. Please refer to the original repository for licensing.
+Windows 桌面版由 [xiaolinnnnnnn](https://github.com/xiaolinnnnnnn/DeepSeek-Balance-Whale-Widget) 实现，本仓库在其基础上继续开发。
+
+本仓库：[WithRain0119/DeepSeek-Balance-Whale-Widget](https://github.com/WithRain0119/DeepSeek-Balance-Whale-Widget)（分支 `DeepSeek-Balance-Whale-Widget-Desktop`）。许可证请以原仓库为准。
+
+This project is derived from the original DSH extension [DeepSeek-Balance-Whale-Widget](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget). Thanks to [MeteorNOX](https://github.com/MeteorNOX) for the original idea and implementation, and to [xiaolinnnnnnn](https://github.com/xiaolinnnnnnn/DeepSeek-Balance-Whale-Widget) for the Windows desktop edition this repository builds upon.
+
+This repository: [WithRain0119/DeepSeek-Balance-Whale-Widget](https://github.com/WithRain0119/DeepSeek-Balance-Whale-Widget) (branch `DeepSeek-Balance-Whale-Widget-Desktop`). Please refer to the original repository for licensing.

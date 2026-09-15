@@ -7,8 +7,10 @@ use crate::model::UpdateCheckResult;
 use serde_json::Value;
 use std::time::Duration;
 
-/// 远端版本清单地址。
-const VERSION_URL: &str = "https://www.xiaolin.help/update/dswDesktopVersion.json";
+/// 远端版本清单地址（本仓库分支根目录下的 `dswDesktopVersion.json`）。
+///
+/// 注意：该文件必须已提交并推送到对应分支，否则更新检查会一直失败。
+const VERSION_URL: &str = "https://raw.githubusercontent.com/WithRain0119/DeepSeek-Balance-Whale-Widget/DeepSeek-Balance-Whale-Widget-Desktop/dswDesktopVersion.json";
 
 /// 请求远端版本清单并与当前版本字符串比较，返回版本检查结果。
 pub async fn check_update_version() -> Result<UpdateCheckResult, String> {
