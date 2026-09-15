@@ -35,51 +35,10 @@
             <input id="apiKey" type="password" placeholder="sk-…" autocomplete="off" />
             <button id="toggleKey" type="button" class="toggle-eye">显示</button>
           </label>
-        </section>
-
-        <!-- 模型配置 -->
-        <section class="card">
-          <div class="model-head">
-            <h2>模型配置</h2>
-            <div class="provider-toggle">
-              <button id="provClaude" type="button" class="prov-btn active" title="Claude">
-                <img src="../assets/icons/claude.svg" alt="Claude" />
-              </button>
-              <button id="provCodex" type="button" class="prov-btn" title="OpenAI Codex">
-                <img src="../assets/icons/openai.svg" alt="OpenAI Codex" />
-              </button>
-            </div>
-          </div>
-
           <label class="field">
-            <span class="field-label short">请求地址</span>
+            <span class="field-label">请求地址</span>
             <input id="baseUrl" type="text" placeholder="https://api.deepseek.com/anthropic" />
           </label>
-
-          <div class="model-row" data-model="primary">
-            <span class="model-name">主模型</span>
-            <input class="model-input" data-field="name" type="text" placeholder="模型名称" />
-            <input class="model-ctx" data-field="contextWindow" type="number" min="1" step="1" />
-            <span class="ctx-unit">token</span>
-          </div>
-          <div class="model-row" data-model="haiku">
-            <span class="model-name">Haiku</span>
-            <input class="model-input" data-field="name" type="text" placeholder="模型名称" />
-            <input class="model-ctx" data-field="contextWindow" type="number" min="1" step="1" />
-            <span class="ctx-unit">token</span>
-          </div>
-          <div class="model-row" data-model="sonnet">
-            <span class="model-name">Sonnet</span>
-            <input class="model-input" data-field="name" type="text" placeholder="模型名称" />
-            <input class="model-ctx" data-field="contextWindow" type="number" min="1" step="1" />
-            <span class="ctx-unit">token</span>
-          </div>
-          <div class="model-row" data-model="opus">
-            <span class="model-name">Opus</span>
-            <input class="model-input" data-field="name" type="text" placeholder="模型名称" />
-            <input class="model-ctx" data-field="contextWindow" type="number" min="1" step="1" />
-            <span class="ctx-unit">token</span>
-          </div>
         </section>
 
         <!-- 挂件显示 -->

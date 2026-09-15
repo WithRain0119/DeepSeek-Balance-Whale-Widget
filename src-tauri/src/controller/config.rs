@@ -31,12 +31,6 @@ pub fn get_config() -> AppConfig {
 pub fn save_config(app: AppHandle, cfg: AppConfig) -> Result<AppConfig, String> {
     let previous = crate::config::get_config();
     let saved = crate::config::update_config(cfg)?;
-    if let Err(e) = crate::service::claude_config::write_claude_settings(&saved) {
-        log::error!("写入 Claude 配置失败: {}", e);
-    }
-    if let Err(e) = crate::service::codex_config::write_codex_settings(&saved) {
-        log::error!("写入 Codex 配置失败: {}", e);
-    }
     if balance_source_changed(&previous, &saved) {
         let _ = app.emit(BALANCE_REFRESH_REQUESTED_EVENT, true);
     }

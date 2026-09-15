@@ -1,8 +1,8 @@
 //! 配置持久化存储
 //!
-//! 负责应用配置（API Key、请求地址、模型、挂件显示、开机自启）的加载、
-//! 内存缓存与原子写盘。借鉴 cc-switch 的 `settings.rs` 模式，使用
-//! `OnceLock<RwLock<AppConfig>>` 做进程内唯一实例，避免多命令并发读写冲突。
+//! 负责应用配置（API Key、请求地址、挂件显示、开机自启）的加载、
+//! 内存缓存与原子写盘。使用 `OnceLock<RwLock<AppConfig>>` 做进程内唯一实例，
+//! 避免多命令并发读写冲突。
 
 use super::model::AppConfig;
 use std::fs;

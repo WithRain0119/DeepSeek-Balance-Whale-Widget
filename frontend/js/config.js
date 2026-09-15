@@ -2,7 +2,6 @@
 //
 // 负责配置页的加载、表单回填、静默保存，以及与挂件窗口的实时同步。
 // 重点覆盖：
-// - 模型配置与供应商切换
 // - 挂件显示设置与自定义音效
 // - 台词列表编辑与调度参数
 // - 余额展示、更新检查与弹窗交互
@@ -60,8 +59,6 @@
   const dialogueCardEl = document.getElementById("dialogueCard");
   const availableBalanceEl = document.getElementById("availableBalance");
   const todayUsageEl = document.getElementById("todayUsage");
-  const provClaudeEl = document.getElementById("provClaude");
-  const provCodexEl = document.getElementById("provCodex");
 
   const SCALE_MIN = 0.6;
   const SCALE_MAX = 2.5;
@@ -85,7 +82,6 @@
   let config = null;
   let saveTimer = null;
   let widgetSaveTimer = null;
-  let activeProvider = "claude"; // 'claude' | 'codex'
   let autostartPending = false;
   let blinkRangeLastChanged = null;
   let balanceRequestSeq = 0;
@@ -117,16 +113,6 @@
     "哦鲸鲸...",
   ];
   let dialogueSaveTimer = null;
-
-  // 读取当前激活供应商对应的模型表。
-  function currentModels() {
-    return activeProvider === "codex" ? config.codexModels : config.models;
-  }
-
-  // 读取当前激活供应商对应的 Base URL。
-  function currentBaseUrl() {
-    return activeProvider === "codex" ? config.codexBaseUrl : config.baseUrl;
-  }
 
   // 配置页通用静默保存：合并高频输入，避免逐字触发 IPC。
   function debouncedSave() {
@@ -394,46 +380,19 @@
     if (toggleDialogueEl) toggleDialogueEl.textContent = "收起";
   }
 
-  // 渲染当前供应商的模型配置。
-  function renderModels() {
-    if (!config) return;
-    baseUrlEl.value = currentBaseUrl() || "";
-    document.querySelectorAll(".model-row").forEach(function (row) {
-      const key = row.dataset.model;
-      const m = currentModels()[key];
-      row.querySelector('[data-field="name"]').value = (m && m.name) || "";
-      row.querySelector('[data-field="contextWindow"]').value =
-        (m && m.contextWindow) || "";
-    });
-    provClaudeEl.classList.toggle("active", activeProvider === "claude");
-    provCodexEl.classList.toggle("active", activeProvider === "codex");
-  }
-
-  function switchProvider(provider) {
-    if (activeProvider === provider) return;
-    activeProvider = provider;
-    renderModels();
-  }
-  provClaudeEl.addEventListener("click", function () {
-    switchProvider("claude");
-  });
-  provCodexEl.addEventListener("click", function () {
-    switchProvider("codex");
-  });
-
   // 首次加载完整配置并回填全部表单。
   invoke("get_config")
     .then(function (cfg) {
       config = cfg;
       lastSavedBalanceSource = getBalanceSourceSnapshot(cfg);
       apiKeyEl.value = cfg.apiKey || "";
+      baseUrlEl.value = cfg.baseUrl || "";
       autostartEl.checked = !!cfg.autostart;
       const ghue = hueFromHex(cfg.globalColor || "#203170");
       globalColorEl.value = String(ghue);
       applyGlobalColor(cfg.globalColor || "#203170");
       applyWidgetToUi(cfg.widget || {});
       applyDialogueToUi(cfg.dialogue);
-      renderModels();
     })
     .catch(function (err) {
       console.error("加载配置失败", err);
@@ -453,9 +412,7 @@
   });
 
   baseUrlEl.addEventListener("input", function (e) {
-    const v = e.target.value.trim();
-    if (activeProvider === "codex") config.codexBaseUrl = v;
-    else config.baseUrl = v;
+    config.baseUrl = e.target.value.trim();
     debouncedSave();
   });
 
@@ -463,25 +420,6 @@
     const showing = apiKeyEl.type === "text";
     apiKeyEl.type = showing ? "password" : "text";
     toggleKeyEl.textContent = showing ? "显示" : "隐藏";
-  });
-
-  document.querySelectorAll(".model-row").forEach(function (row) {
-    const key = row.dataset.model;
-    row
-      .querySelector('[data-field="name"]')
-      .addEventListener("input", function (e) {
-        const m = currentModels()[key];
-        if (m) m.name = e.target.value.trim();
-        debouncedSave();
-      });
-    row
-      .querySelector('[data-field="contextWindow"]')
-      .addEventListener("input", function (e) {
-        const v = Math.max(1, Math.floor(Number(e.target.value) || 0));
-        const m = currentModels()[key];
-        if (m) m.contextWindow = v;
-        debouncedSave();
-      });
   });
 
   // 滑杆档位映射为实际缩放倍率后再保存。

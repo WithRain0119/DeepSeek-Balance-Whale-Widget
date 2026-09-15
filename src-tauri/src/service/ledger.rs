@@ -8,6 +8,15 @@
 use crate::model::ledger::today_key;
 use crate::model::UsageLedger;
 use std::fs;
+use std::sync::Mutex;
+
+/// 串行化账本的「读-改-写」。
+///
+/// 挂件窗口与配置窗口会各自定时调用余额接口，两个请求可能并行进入
+/// `record_usage`。若不互斥，它们会争抢同一个临时文件 `usage.json.tmp`：
+/// 先完成的一方 rename 后临时文件即消失，另一方 rename 便会失败
+/// （os error 2）；同时后写的一方还可能用旧账本覆盖新值，导致用量少记。
+static LEDGER_LOCK: Mutex<()> = Mutex::new(());
 
 /// 从磁盘读取账本；缺失/损坏时返回默认账本。
 fn read_ledger() -> UsageLedger {
@@ -44,6 +53,11 @@ fn write_ledger(ledger: &UsageLedger) -> Result<(), String> {
 /// 2. 同日：余额下降时把差值累加进 `today_usage`；无论升降都更新 `last_balance`。
 /// 3. 历史归档仅保留最近 30 天。
 pub fn record_usage(current_balance: f64) -> UsageLedger {
+    // 整段读-改-写必须互斥，否则并发调用会互相覆盖或争抢临时文件。
+    let _guard = LEDGER_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+
     let today = today_key();
     let mut ledger = read_ledger();
 

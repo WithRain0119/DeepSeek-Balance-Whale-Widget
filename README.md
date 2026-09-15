@@ -14,7 +14,6 @@ A Windows desktop widget built with Tauri v2. It keeps a cute whale pinned to th
 - **今日已用记账**：通过余额差值自动记账，跨天自动归档。
 - **拖拽吸附**：按住拖动，松手后按四分之一区域自动吸附屏幕四边；左吸附自动镜像翻转。
 - **互动表情**：生气、失落、害羞等多种表情自动切换。
-- **模型配置**：类似cc-swtich，允许用户自定义claude/codex模型与token上下文。
 - **自定义音效**：允许用户自定义点击音效。
 - **自定义台词**：允许用户自定义气泡展示台词。
 
@@ -82,7 +81,7 @@ All config and usage data is stored locally in the user directory:
 
 ```
 %APPDATA%\DS Desktop Whale\
-├── config.json    # API Key / 请求地址 / 模型 / 挂件显示 / 开机自启
+├── config.json    # API Key / 请求地址 / 挂件显示 / 台词 / 开机自启
 └── usage.json     # 小鲸鱼记账数据（含近 30 天历史归档）
 ```
 

@@ -156,12 +156,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 .toggle-eye { border: 1px solid var(--border); background: #fff; color: var(--text); border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
 .toggle-eye:hover { background: rgba(32, 49, 112, 0.06); }
 
-.model-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-.model-name { flex: 0 0 70px; color: var(--text); }
-.model-input { flex: 1; min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--text); outline: none; }
-.model-input:focus { border-color: var(--primary-2); }
-.model-ctx { width: 100px; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--text); outline: none; }
-.model-ctx:focus { border-color: var(--primary-2); }
 .ctx-unit { width: 34px; color: var(--muted); font-size: 12px; }
 
 .sys-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
@@ -174,7 +168,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 .switch input:checked + .slider { background: var(--primary); }
 .switch input:checked + .slider::before { transform: translateX(20px); }
 
-/* 模型配置头部 + 供应商切换 */
+/* 卡片标题行：标题 + 右侧操作按钮 */
 .model-head {
   display: flex;
   align-items: center;
@@ -182,23 +176,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
   margin-bottom: 12px;
 }
 .model-head h2 { margin: 0; }
-
-.provider-toggle { display: flex; gap: 6px; }
-.prov-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 4px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #fff;
-  cursor: pointer;
-  opacity: 0.5;
-}
-.prov-btn img { width: 100%; height: 100%; object-fit: contain; }
-.prov-btn.active { opacity: 1; border-color: var(--primary); background: rgba(32, 49, 112, 0.06); }
 
 .color-slider {
   -webkit-appearance: none;

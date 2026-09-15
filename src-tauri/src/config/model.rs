@@ -1,65 +1,16 @@
 //! 配置数据模型
 //!
-//! 定义应用配置涉及的全部数据结构（API Key、请求地址、模型、挂件显示、
+//! 定义应用配置涉及的全部数据结构（API Key、请求地址、挂件显示、
 //! 开机自启、台词管理等）及其默认值与规范化（`normalize`）逻辑。
 
 use serde::{Deserialize, Serialize};
 
-/// DeepSeek 官方 API 默认根地址（可被用户自定义覆盖）。
+/// DeepSeek 官方 API 默认根地址（余额查询使用）。
 const DEFAULT_BASE_URL: &str = "https://api.deepseek.com/anthropic";
-
-/// OpenAI Codex 默认根地址（可被用户自定义覆盖）。
-const DEFAULT_CODEX_BASE_URL: &str = "https://api.deepseek.com";
 
 // ---------------------------------------------------------------------------
 // 数据模型
 // ---------------------------------------------------------------------------
-
-/// 单个模型系列的配置：模型名称 + 上下文窗口大小。
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ModelEntry {
-    /// 模型名称（用户可自定义，如 `deepseek-chat`）。
-    pub name: String,
-    /// 上下文窗口大小（token 数）。
-    pub context_window: u32,
-}
-
-impl ModelEntry {
-    /// 构造单个模型项。
-    fn new(name: &str, context_window: u32) -> Self {
-        Self {
-            name: name.to_string(),
-            context_window,
-        }
-    }
-}
-
-/// Haiku / Sonnet / Opus 三个系列的默认调用模型配置。
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ModelConfig {
-    /// 主模型（默认调用模型，映射 ANTHROPIC_MODEL / Codex model）。
-    pub primary: ModelEntry,
-    /// 快速轻量档（Haiku）。
-    pub haiku: ModelEntry,
-    /// 均衡档（Sonnet）。
-    pub sonnet: ModelEntry,
-    /// 旗舰推理档（Opus）。
-    pub opus: ModelEntry,
-}
-
-impl Default for ModelConfig {
-    /// 返回 Claude / Codex 共用的默认模型配置。
-    fn default() -> Self {
-        Self {
-            primary: ModelEntry::new("deepseek-v4-flash", 1_000_000),
-            haiku: ModelEntry::new("deepseek-v4-flash", 1_000_000),
-            sonnet: ModelEntry::new("deepseek-v4-flash", 1_000_000),
-            opus: ModelEntry::new("deepseek-v4-flash", 1_000_000),
-        }
-    }
-}
 
 /// 挂件显示配置（与旧 DSH 插件的 `.dshw-size.json` 一一对应）。
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -209,18 +160,9 @@ pub struct AppConfig {
     /// DeepSeek API Key（用于官方余额接口）。
     #[serde(default)]
     pub api_key: String,
-    /// Claude（Anthropic）请求根地址。
+    /// DeepSeek 请求根地址（余额接口所在域名）。
     #[serde(default = "default_base_url")]
     pub base_url: String,
-    /// OpenAI Codex 请求根地址。
-    #[serde(default = "default_codex_base_url")]
-    pub codex_base_url: String,
-    /// Claude 模型配置。
-    #[serde(default)]
-    pub models: ModelConfig,
-    /// OpenAI Codex 模型配置。
-    #[serde(default)]
-    pub codex_models: ModelConfig,
     /// 挂件显示配置。
     #[serde(default)]
     pub widget: WidgetConfig,
@@ -238,14 +180,9 @@ pub struct AppConfig {
     pub widget_position: Option<WidgetPosition>,
 }
 
-/// 返回默认 Claude 请求根地址。
+/// 返回默认请求根地址。
 fn default_base_url() -> String {
     DEFAULT_BASE_URL.to_string()
-}
-
-/// 返回默认 Codex 请求根地址。
-fn default_codex_base_url() -> String {
-    DEFAULT_CODEX_BASE_URL.to_string()
 }
 
 /// 返回默认气泡颜色。
@@ -284,9 +221,6 @@ impl Default for AppConfig {
         Self {
             api_key: String::new(),
             base_url: DEFAULT_BASE_URL.to_string(),
-            codex_base_url: DEFAULT_CODEX_BASE_URL.to_string(),
-            models: ModelConfig::default(),
-            codex_models: ModelConfig::default(),
             widget: WidgetConfig::default(),
             autostart: false,
             global_color: "#203170".to_string(),
@@ -307,26 +241,6 @@ impl AppConfig {
         } else {
             base
         };
-
-        let codex_base = self.codex_base_url.trim().trim_end_matches('/').to_string();
-        self.codex_base_url = if codex_base.is_empty() {
-            DEFAULT_CODEX_BASE_URL.to_string()
-        } else {
-            codex_base
-        };
-
-        for entry in [
-            &mut self.models.primary,
-            &mut self.models.haiku,
-            &mut self.models.sonnet,
-            &mut self.models.opus,
-            &mut self.codex_models.primary,
-            &mut self.codex_models.haiku,
-            &mut self.codex_models.sonnet,
-            &mut self.codex_models.opus,
-        ] {
-            entry.name = entry.name.trim().to_string();
-        }
 
         if self.global_color.trim().is_empty() {
             self.global_color = "#203170".to_string();
